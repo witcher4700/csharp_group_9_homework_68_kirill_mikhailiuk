@@ -1,0 +1,83 @@
+﻿@model HeadHunter.ViewModels.RegisterViewModel
+
+
+
+<h2>Регистрация нового пользователя</h2>
+
+<form method="post" asp-controller="Account" asp-action="Register">
+
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <div>
+
+        <label asp-for="Email"></label><br />
+
+        <input asp-for="Email" type="email"/>
+
+        <span asp-validation-for="Email"></span>
+
+    </div>
+    <div>
+
+        <label asp-for="UserName"></label><br />
+
+        <input asp-for="UserName" />
+
+        <span asp-validation-for="UserName"></span>
+
+    </div>
+    <div>
+
+        <label asp-for="PhoneNumber"></label><br />
+
+        <input asp-for="PhoneNumber" />
+
+        <span asp-validation-for="PhoneNumber"></span>
+
+    </div>
+    <div>
+
+        <label asp-for="Avatar"></label><br />
+
+        <input asp-for="Avatar" />
+
+        <span asp-validation-for="Avatar"></span>
+
+    </div>
+    <div>
+        <label asp-for="Occupation"></label><br />
+        <select asp-for="Occupation">
+            <option disabled selected>Выберите род деятельности</option>
+            <option value="@Occupation.Employer">@Occupation.Employer</option>
+            <option value="@Occupation.JobSeeker">@Occupation.JobSeeker</option>
+        </select>
+        <span asp-validation-for="Occupation"></span>
+    </div>
+    
+    <div>
+
+        <label asp-for="Password"></label><br />
+
+        <input asp-for="Password" />
+
+        <span asp-validation-for="Password"></span>
+
+    </div>
+
+    <div>
+
+        <label asp-for="PasswordConfirm"></label><br />
+
+        <input asp-for="PasswordConfirm" />
+
+        <span asp-validation-for="PasswordConfirm"></span>
+
+    </div>
+
+    <div>
+
+        <input type="submit" value="Регистрация" />
+
+    </div>
+
+</form>
