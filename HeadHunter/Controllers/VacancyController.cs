@@ -1,5 +1,6 @@
 ﻿using HeadHunter.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace HeadHunter.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var vacancies = _context.Vacancies.Where(v => v.Status == Status.InPublic);
+            return View(vacancies);
         }
 
         public IActionResult Add()
@@ -38,6 +40,36 @@ namespace HeadHunter.Controllers
                 _context.SaveChanges();
             }
             return RedirectToAction("Index");
+        }
+        public IActionResult ChangeStatus(int vacancyId)
+        {
+            var vacancy = _context.Vacancies.Find(vacancyId);
+            _context.Entry(vacancy).State = EntityState.Modified;
+            if (vacancy.Status == Status.InPublic)
+            {
+                vacancy.Status = Status.InStock;
+            }
+            else
+            {
+                vacancy.Status = Status.InPublic;
+            }
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        public IActionResult RefreshDate(int vacancyId)
+        {
+            var vacancy = _context.Vacancies.Find(vacancyId);
+            _context.Entry(vacancy).State = EntityState.Modified;
+            vacancy.RefreshDate = DateTime.Now;
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Details(int vacancyId)
+        {
+            var vacancy = _context.Vacancies.Find(vacancyId);
+            
+            return View(vacancy);
         }
     }
 }

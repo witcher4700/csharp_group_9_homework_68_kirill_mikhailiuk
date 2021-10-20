@@ -1,0 +1,79 @@
+﻿@model HeadHunter.Models.Vacancy
+
+
+@{ ViewBag.Title = "Добавить Вакансию";
+
+    Layout = "_Layout"; }
+
+
+<h2>Заполните форму для добавления новой вакансии</h2>
+
+<div class="row">
+
+    <div class="phone_add_form col-md-6">
+
+        <form asp-action="Add" method="post">
+
+            <div class="form_row">
+
+                <label for="">
+
+                    Название вакансии
+
+                    <input asp-for="Name" type="text" placeholder="Введите название" required="required">
+
+                </label>
+
+            </div>
+            <div class="form_row">
+
+                <label for="">
+
+                    Категория
+
+                    @Html.DropDownListFor(o => o.Category, Enum.GetValues(typeof(Category)).Cast<Category>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }))
+
+                </label>
+
+            </div>
+            <div class="form_row">
+
+                <label for="">
+
+                    Description задачи
+
+                </label>
+                @Html.TextAreaFor(m => m.Description)
+            </div>
+            <div class="form_row">
+
+                <label for="">
+
+                    Опыт от
+
+                    <input asp-for="ExpirienceFrom" type="text" placeholder="Введите название" required="required">
+
+                </label>
+
+            </div>
+            <div class="form_row">
+
+                <label for="">
+
+                    Опыт до
+
+                    <input asp-for="ExpirienceTo" type="text" placeholder="Введите название" required="required">
+
+                </label>
+
+            </div>
+
+            <button type="submit">Создать</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+

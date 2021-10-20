@@ -1,5 +1,37 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@{ ViewData["Title"] = "Home Page"; }
+@model IEnumerable<Vacancy>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>text-align</title>
+    <style>
+
+
+        .container {
+            width: 100%;
+            text-align: center
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Список вакансий</h3>
+        <a asp-action="Add" asp-controller="Vacancy">Добавить вакансию</a>
+        <div class="row row-cols-1 row-cols-md-3">
+            @foreach (var v in Model)
+            {
+           <div class="col mb-4">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">@v.Name</h5>
+            <p class="card-text text-muted">@v.RefreshDate</p>
+            <a asp-action="Details" asp-controller="Vacancy" asp-route-vacancyId="@v.Id">Подробнее</a>
+        </div>
+    </div>
+</div>
+            }
+            </div>
+    </div>
+</body>
+</html>

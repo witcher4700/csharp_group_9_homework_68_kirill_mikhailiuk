@@ -1,5 +1,5 @@
 ﻿@{ ViewData["Title"] = "Home Page"; }
-@model IEnumerable<Resume>
+@model IEnumerable<Vacancy>
 
 <html>
 <head>
@@ -16,21 +16,24 @@
 </head>
 <body>
     <div class="container">
-        <h3>Список резюме</h3>
-        <a asp-action="Add" asp-controller="Resume">Добавить резюме</a>
+        <h3>Список вакансий</h3>
+        <a asp-action="Add" asp-controller="Vacancy">Добавить вакансию</a>
         <div class="row row-cols-1 row-cols-md-3">
             @foreach (var v in Model)
             {
+
     <div class="col mb-4">
         <div class="card" style="width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title">Wanted salary: @v.WantedSalary</h5>
+                <h5 class="card-title">@v.Name</h5>
                 <p class="card-text text-muted">@v.RefreshDate</p>
-                <a asp-action="Details" asp-controller="Resume" asp-route-vacancyId="@v.Id">Подробнее</a>
+                <a class="card-link" asp-action="ChangeStatus" asp-controller="Vacancy" asp-route-vacancyId="@v.Id">Поменять статус</a>
+                <a class="card-link" asp-action="RefreshDate" asp-controller="Vacancy" asp-route-vacancyId="@v.Id">Обновить</a>
+                <a asp-action="Details" asp-controller="Vacancy" asp-route-vacancyId="@v.Id">Подробнее</a>
             </div>
         </div>
     </div>
-          }
+            }
         </div>
     </div>
 </body>

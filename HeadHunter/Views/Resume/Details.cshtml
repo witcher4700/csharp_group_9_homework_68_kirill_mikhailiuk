@@ -1,0 +1,60 @@
+﻿@model HeadHunter.ViewModels.ResumeDetails
+
+
+@{ ViewData["Title"] = "Резюме"; }
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>text-align</title>
+    <style>
+
+        .container {
+            width: 100%;
+            text-align: center
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Препочитаемая зарплата: @Model.Resume.WantedSalary</h5>
+                <p class="card-text">@Model.Resume.Description</p>
+                @if (!String.IsNullOrEmpty(Model.Resume.Telegram))
+                {
+            <p class="card-text">Телега: @Model.Resume.Telegram</p>}
+                @if (!String.IsNullOrEmpty(Model.Resume.LinkedIn))
+                {
+            <p class="card-text">ЛинкедИн: @Model.Resume.LinkedIn</p>}
+                @if (!String.IsNullOrEmpty(Model.Resume.Facebook))
+                {
+            <p class="card-text">Фасебук: @Model.Resume.Facebook</p>}
+                <p class="card-text">Номер телефона: @Model.User.PhoneNumber</p>
+                <p class="card-text">Email: @Model.User.Email</p>
+                @foreach (var ed in Model.Educations)
+                {
+            <div class="card-body">
+                <p class="card-text">Название образования: @ed.Name</p>
+                <p class="card-text">Описание: @ed.Description</p>
+            </div>}
+                @foreach (var ex in Model.Expiriences)
+                {
+            <div class="card-body">
+                <p class="card-text">Название: @ex.Name</p>
+                <p class="card-text">Количество месяцев на работе: @ex.MonthCount</p>
+                <p class="card-text">Должность: @ex.Position</p>
+                <p class="card-text">Обязанности: @ex.Responsibilities</p>
+            </div>}
+                <p class="card-text">Категория резюме: @Model.Resume.VacancyCategory</p>
+                <a href="#" class="btn btn-primary">Откликнуться</a>
+            </div>
+            <div class="card-footer text-muted">
+                @Model.Resume.RefreshDate
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

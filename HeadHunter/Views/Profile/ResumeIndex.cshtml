@@ -21,16 +21,19 @@
         <div class="row row-cols-1 row-cols-md-3">
             @foreach (var v in Model)
             {
+
     <div class="col mb-4">
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title">Wanted salary: @v.WantedSalary</h5>
                 <p class="card-text text-muted">@v.RefreshDate</p>
-                <a asp-action="Details" asp-controller="Resume" asp-route-vacancyId="@v.Id">Подробнее</a>
+                <a class="card-link" asp-action="ChangeStatus" asp-controller="Resume" asp-route-resumeId="@v.Id">Поменять статус</a>
+                <a class="card-link" asp-action="RefreshDate" asp-controller="Resume" asp-route-resumeId="@v.Id">Обновить</a>
+                <a asp-action="Details" asp-controller="Resume" asp-route-resumeId="@v.Id">Подробнее</a>
             </div>
         </div>
     </div>
-          }
+       }
         </div>
     </div>
 </body>
