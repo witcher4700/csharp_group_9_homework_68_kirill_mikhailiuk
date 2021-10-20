@@ -13,8 +13,7 @@ namespace HeadHunter.Models
     }
     public enum Occupation
     {
-        Undefined,
-        Employer,
-        JobSeeker
+        Работодатель,
+        Соискатель
     }
 }

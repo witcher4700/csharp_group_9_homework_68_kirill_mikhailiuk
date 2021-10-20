@@ -52,7 +52,7 @@ namespace HeadHunter.Controllers
 
                 if (result.Succeeded)
                 {
-                    if (model.Occupation == Occupation.Employer)
+                    if (model.Occupation == Occupation.Работодатель)
                     {
                         await _userManager.AddToRoleAsync(user, "employer");
                     }
@@ -61,7 +61,14 @@ namespace HeadHunter.Controllers
                         await _userManager.AddToRoleAsync(user, "jobSeeker");
                     }
                     await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Post");
+                    if (user.Occupation == Occupation.Работодатель)
+                    {
+                        return RedirectToAction("Index", "Resume");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Vacancy");
+                    }
                 }
                 foreach (var error in result.Errors)
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -81,7 +88,7 @@ namespace HeadHunter.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _userManager.FindByNameAsync(model.Email);
+                User user = await _userManager.FindByEmailAsync(model.Email);
                 Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(
                     user,
                     model.Password,
@@ -94,7 +101,14 @@ namespace HeadHunter.Controllers
                     {
                         return Redirect(model.ReturnUrl);
                     }
-                    return RedirectToAction("Index", "Post");
+                    if(user.Occupation == Occupation.Работодатель)
+                    {
+                        return RedirectToAction("Index", "Resume");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Vacancy");
+                    }
                 }
                 ModelState.AddModelError("", "Неправильный логин и (или) пароль");
             }
@@ -106,7 +120,7 @@ namespace HeadHunter.Controllers
         public async Task<IActionResult> LogOff()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Post");
+            return RedirectToAction("Login", "Account");
         }
     }
 }

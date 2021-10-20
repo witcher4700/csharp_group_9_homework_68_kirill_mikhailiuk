@@ -48,8 +48,8 @@
         <label asp-for="Occupation"></label><br />
         <select asp-for="Occupation">
             <option disabled selected>Выберите род деятельности</option>
-            <option value="@Occupation.Employer">@Occupation.Employer</option>
-            <option value="@Occupation.JobSeeker">@Occupation.JobSeeker</option>
+            <option value="@Occupation.Работодатель">@Occupation.Работодатель</option>
+            <option value="@Occupation.Соискатель">@Occupation.Соискатель</option>
         </select>
         <span asp-validation-for="Occupation"></span>
     </div>
