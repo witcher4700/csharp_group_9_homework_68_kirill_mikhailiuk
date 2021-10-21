@@ -18,69 +18,13 @@ namespace HeadHunter.Controllers
         }
         public IActionResult Index()
         {
-            var resumes = _context.Resumes.Where(v => v.Status == Status.InPublic);
+            var resumes = _context.Resumes.Where(v => v.Status == Status.InPublic).OrderByDescending(r=>r.RefreshDate);
             return View(resumes);
         }
 
         public IActionResult Add()
         {
             return View();
-        }
-
-        [HttpPost]
-
-        public IActionResult Add(Resume resume)
-        {
-            if (resume != null)
-            {
-                var userName = User.Identity.Name;
-                resume.UserId = _context.Users.FirstOrDefault(u => u.UserName == userName).Id;
-                resume.RefreshDate = DateTime.Now;
-                resume.Status = Status.InStock;
-                _context.Resumes.Add(resume);
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Index");
-        }
-        public IActionResult AddEducation(int resumeId)
-        {
-            var education = new Education()
-            {
-                ResumeId = resumeId
-            };
-            return View(education);
-        }
-
-        [HttpPost]
-
-        public IActionResult AddEducation(Education education)
-        {
-            if (education != null)
-            {
-                _context.Educations.Add(education);
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Index");
-        }
-        public IActionResult AddExpirience(int resumeId)
-        {
-            var education = new Education()
-            {
-                ResumeId = resumeId
-            };
-            return View(education);
-        }
-
-        [HttpPost]
-
-        public IActionResult AddExpirience(Expirience expirience)
-        {
-            if (expirience != null)
-            {
-                _context.Expiriences.Add(expirience);
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Index");
         }
 
         public IActionResult ChangeStatus(int resumeId)
@@ -112,10 +56,57 @@ namespace HeadHunter.Controllers
             {
                 Resume = _context.Resumes.Find(resumeId)
             };
-            resumeDetails.User = _context.Users.FirstOrDefault(u=>u.Id == resumeDetails.Resume.UserId);
+            resumeDetails.User = _context.Users.FirstOrDefault(u => u.Id == resumeDetails.Resume.UserId);
             resumeDetails.Educations = _context.Educations.Where(e => e.ResumeId == resumeDetails.Resume.Id);
             resumeDetails.Expiriences = _context.Expiriences.Where(e => e.ResumeId == resumeDetails.Resume.Id);
             return View(resumeDetails);
+        }
+
+        public IActionResult AddResume(ResumeAddViewModel model)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            var resume = new Resume()
+            {
+                UserId = user.Id,
+                Description = model.Description,
+                WantedSalary = model.WantedSalary,
+                VacancyCategory = model.VacancyCategory,
+                Telegram = model.Telegram,
+                Facebook = model.Facebook,
+                LinkedIn = model.LinkedIn,
+                Status = Status.InStock,
+                RefreshDate = DateTime.Now
+            };
+            _context.Resumes.Add(resume);
+            _context.SaveChanges();
+            var educationList = new List<Education>();
+            for (int i = 0; i < model.Educations.Count; i++)
+            {
+                var education = new Education()
+                {
+                    ResumeId = resume.Id,
+                    Description = model.Educations[i].Description,
+                    Name = model.Educations[i].Name
+                };
+                educationList.Add(education);
+            }
+            var expirienceList = new List<Expirience>();
+            for (int i = 0; i < model.Expiriences.Count; i++)
+            {
+                var expirience = new Expirience()
+                {
+                    ResumeId = resume.Id,
+                    Responsibilities = model.Expiriences[i].Responsibilities,
+                    Name = model.Expiriences[i].Name,
+                    MonthCount = model.Expiriences[i].MonthCount,
+                    Position = model.Expiriences[i].Position
+                };
+                expirienceList.Add(expirience);
+            }
+            _context.Expiriences.AddRange(expirienceList);
+            _context.Educations.AddRange(educationList);
+            _context.SaveChanges();
+            return RedirectToAction("Index", "Vacancy");
         }
     }
 }

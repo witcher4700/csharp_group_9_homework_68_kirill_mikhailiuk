@@ -5,7 +5,6 @@
 
     Layout = "_Layout"; }
 
-
 <h2>Заполните форму для добавления нового резюме</h2>
 
 <div class="row">
@@ -20,7 +19,7 @@
 
                     Желаемая зарплата
 
-                    <input asp-for="WantedSalary" type="text" placeholder="Введите название" required="required">
+                    <input asp-for="WantedSalary" type="text" placeholder="Введите название" id="wantedSalary" required="required">
 
                 </label>
 
@@ -31,7 +30,7 @@
 
                     Telegram
 
-                    <input asp-for="Telegram" type="text" placeholder="Введите название" >
+                    <input asp-for="Telegram" type="text" id="telegram" placeholder="Введите название">
 
                 </label>
 
@@ -42,7 +41,7 @@
 
                     Facebook
 
-                    <input asp-for="Facebook" type="text" placeholder="Введите название" >
+                    <input asp-for="Facebook" type="text" id="facebook" placeholder="Введите название">
 
                 </label>
 
@@ -53,7 +52,7 @@
 
                     LinkedIn
 
-                    <input asp-for="LinkedIn" type="text" placeholder="Введите название" >
+                    <input asp-for="LinkedIn" type="text" id="linkedIn" placeholder="Введите название">
 
                 </label>
 
@@ -64,7 +63,7 @@
 
                     Категория
 
-                    @Html.DropDownListFor(o => o.VacancyCategory, Enum.GetValues(typeof(Category)).Cast<Category>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }))
+                    @Html.DropDownListFor(o => o.VacancyCategory, Enum.GetValues(typeof(Category)).Cast<Category>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }), htmlAttributes: new { id = "category" })
 
                 </label>
 
@@ -73,18 +72,187 @@
 
                 <label for="">
 
-                    Description задачи
+                    Описание резюме
 
                 </label>
-                @Html.TextAreaFor(m => m.Description)
+                @Html.TextAreaFor(m => m.Description, htmlAttributes: new { id = "description" })
             </div>
-
-            <button type="submit">Создать</button>
-
+            <table>
+                <tr>
+                    <td>
+                        Название образования
+                    </td>
+                    <td>
+                        <input type="text" name="EducationName" value="" id="txtEducationName" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Описание образования
+                    </td>
+                    <td>
+                        <input type="text" name="EducationDescription" value="" id="txtEducationDescription" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="button" id="btnAddEducationRecords" value="Добавить образование" />
+                    </td>
+                </tr>
+            </table>
+            <table class="table" style="width:100%" id="tableEducationRecords">
+                <thead>
+                    <tr>
+                        <th>
+                            Название образования
+                        </th>
+                        <th>
+                            Описание образования
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table>
+                <tr>
+                    <td>
+                        Название места работы
+                    </td>
+                    <td>
+                        <input type="text" name="ExpirienceName" value="" id="txtExpirienceName" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Обязанности
+                    </td>
+                    <td>
+                        <input type="text" name="ExpirienceResponsibilities" value="" id="txtExpirienceResponsibilities" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Должность
+                    </td>
+                    <td>
+                        <input type="text" name="ExpiriencePosition" value="" id="txtExpiriencePosition" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Количество месяцев работы
+                    </td>
+                    <td>
+                        <input type="number" name="ExpirienceMonthCount" value="" id="txtExpirienceMonthCount" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="button" id="btnAddExpirienceRecords" value="Добавить опыт работы" />
+                    </td>
+                </tr>
+            </table>
+            <table class="table" style="width:100%" id="tableExpirienceRecords">
+                <thead>
+                    <tr>
+                        <th>
+                            Название места работы
+                        </th>
+                        <th>
+                            Обязанности
+                        </th>
+                        <th>
+                            Должность
+                        </th>
+                        <th>
+                            Количество месяцев работы
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <button type="submit" id="btnSaveData" class="btn btn-primary">Создать</button>
         </form>
-
     </div>
-
 </div>
+@section scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btnAddEducationRecords").click(function () {
+                AddEducationRecords();
+            });
+        });
+        $(document).ready(function () {
+            $("#btnAddExpirienceRecords").click(function () {
+                AddExpirienceRecords();
+            });
+        });
+
+        $("#btnSaveData").click(function () {
+            SaveEducationRecords();
+        });
+
+        function AddEducationRecords() {
+            var EducationRecords = "<tr><td>" + $("#txtEducationName").val() + "</td><td>" + $("#txtEducationDescription").val() + "</td></tr>";
+            $("#tableEducationRecords").last().append(EducationRecords);
+            $("#txtEducationName").val("");
+            $("#txtEducationDescription").val("");
+        };
+
+        function AddExpirienceRecords() {
+            var ExpirienceRecords = "<tr><td>" + $("#txtExpirienceName").val() + "</td><td>" + $("#txtExpirienceResponsibilities").val() + "</td><td>" + $("#txtExpiriencePosition").val() + "</td><td>" + $("#txtExpirienceMonthCount").val() + "</td></tr>";
+            $("#tableExpirienceRecords").last().append(ExpirienceRecords);
+            $("#txtExpirienceName").val("");
+            $("#txtExpirienceResponsibilities").val("");
+            $("#txtExpiriencePosition").val("");
+            $("#txtExpirienceMonthCount").val("");
+        };
+
+        function SaveEducationRecords() {
+            var educations = new Array();
+            $("#tableEducationRecords").find("tr:gt(0)").each(function () {
+                var Name = $(this).find("td:eq(0)").text();
+                var Description = $(this).find("td:eq(1)").text();
+
+                var EducationViewModel = {};
+                EducationViewModel.Name = Name;
+                EducationViewModel.Description = Description;
+                educations.push(EducationViewModel);
+            });
+            var expiriences = new Array();
+            $("#tableExpirienceRecords").find("tr:gt(0)").each(function () {
+                var ExName = $(this).find("td:eq(0)").text();
+                var Responsibilities = $(this).find("td:eq(1)").text();
+                var Position = $(this).find("td:eq(2)").text();
+                var MonthCount = $(this).find("td:eq(3)").text();
+
+                var ExpirienceViewModel = {};
+                ExpirienceViewModel.Name = ExName;
+                ExpirienceViewModel.Responsibilities = Responsibilities;
+                ExpirienceViewModel.Position = Position;
+                ExpirienceViewModel.MonthCount = MonthCount;
+                expiriences.push(ExpirienceViewModel);
+            });
+            console.log(educations);
+            $.post('@Url.Action("AddResume", "Resume")',
+                    {
+                        educations: educations,
+                        expiriences: expiriences,
+                        description: $("#description").val(),
+                        wantedSalary: $("#wantedSalary").val(),
+                        telegram: $("#telegram").val(),
+                        facebook: $("#facebook").val(),
+                        linkedIn: $("#linkedIn").val(),
+                        vacancyCategory: $("#category").val()
+                    },
+                    function (response) {
+                        console.log(response)
+                    }
+                )
+            }
+
+
+    </script>
+}
 
 

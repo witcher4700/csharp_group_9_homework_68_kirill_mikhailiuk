@@ -17,7 +17,8 @@
 <body>
     <div class="container">
         <h3>Список вакансий</h3>
-        <a asp-action="Add" asp-controller="Vacancy">Добавить вакансию</a>
+        <a asp-action="Add" class="btn-primary btn" asp-controller="Vacancy">Добавить вакансию</a>
+        <a asp-action="Edit" asp-controller="Profile" class="btn-primary btn">Редактировать профиль</a>
         <div class="row row-cols-1 row-cols-md-3">
             @foreach (var v in Model)
             {
@@ -32,8 +33,7 @@
                 <a asp-action="Details" asp-controller="Vacancy" asp-route-vacancyId="@v.Id">Подробнее</a>
             </div>
         </div>
-    </div>
-            }
+    </div>            }
         </div>
     </div>
 </body>

@@ -12,14 +12,14 @@
 
         <label asp-for="Email"></label><br />
 
-        <input asp-for="Email" type="email"/>
+        <input asp-for="Email" type="email" />
 
         <span asp-validation-for="Email"></span>
 
     </div>
     <div>
 
-        <label asp-for="UserName"></label><br />
+        <label asp-for="UserName" id="changingName"></label><br />
 
         <input asp-for="UserName" />
 
@@ -46,14 +46,14 @@
     </div>
     <div>
         <label asp-for="Occupation"></label><br />
-        <select asp-for="Occupation">
+        <select asp-for="Occupation" id="occupation">
             <option disabled selected>Выберите род деятельности</option>
             <option value="@Occupation.Работодатель">@Occupation.Работодатель</option>
             <option value="@Occupation.Соискатель">@Occupation.Соискатель</option>
         </select>
         <span asp-validation-for="Occupation"></span>
     </div>
-    
+
     <div>
 
         <label asp-for="Password"></label><br />
@@ -81,3 +81,20 @@
     </div>
 
 </form>
+@section scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#occupation").change(function () {
+                if ($("#occupation").val() == "Работодатель") {
+                    $("#changingName").text("Имя компании");
+                }
+                else {
+                    $("#changingName").text("Имя пользователя");
+                }
+                
+            });
+        });
+    </script>
+}

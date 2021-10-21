@@ -14,15 +14,11 @@
             <div class="container">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Post" asp-action="Index"><span style="font-size: 36px;"> <i class="fab fa-instagram"></i>  | <img src="/images/Instagram_Logo_Large.png" alt="Logo" width="124" height="52" /> </span> </a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Profile" asp-action="ChooseRole"><span style="font-size: 36px;"> <i class="fas fa-heading"></i> </span> </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <form class="form-inline" asp-action="Search" asp-controller="Post">
-                        <input type="text" name="query" class="form-control" value="" />
-                        <input type="submit" value="Поиск" class="btn btn-default" />
-                    </form>
                 }
                 <div class="login_group d-flex row">
                     @if (User.Identity.IsAuthenticated)

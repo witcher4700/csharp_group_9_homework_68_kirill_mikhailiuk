@@ -17,7 +17,7 @@ namespace HeadHunter.Controllers
         }
         public IActionResult Index()
         {
-            var vacancies = _context.Vacancies.Where(v => v.Status == Status.InPublic);
+            var vacancies = _context.Vacancies.Where(v => v.Status == Status.InPublic).OrderByDescending(r => r.RefreshDate);
             return View(vacancies);
         }
 
@@ -39,7 +39,7 @@ namespace HeadHunter.Controllers
                 _context.Vacancies.Add(vacancy);
                 _context.SaveChanges();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Resume");
         }
         public IActionResult ChangeStatus(int vacancyId)
         {
