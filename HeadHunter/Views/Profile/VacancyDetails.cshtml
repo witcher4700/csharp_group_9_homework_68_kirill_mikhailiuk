@@ -1,0 +1,38 @@
+﻿@model HeadHunter.Models.Vacancy
+
+
+@{ ViewData["Title"] = Model.Name; }
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>text-align</title>
+    <style>
+
+        .container {
+            width: 100%;
+            text-align: center
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card text-center">
+            <div class="card-header">
+                @Model.Name
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Опыт работы от: @Model.ExpirienceFrom до @Model.ExpirienceTo лет</h5>
+                <p class="card-text">@Model.Description</p>
+                <p class="card-text">Категория вакансии: @Model.Category</p>
+                <a asp-action="EditVacancy" class="btn btn-primary" asp-controller="Profile" asp-route-vacancyId="@Model.Id">Редактировать</a>
+            </div>
+            <div class="card-footer text-muted">
+                @Model.RefreshDate
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

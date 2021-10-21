@@ -30,7 +30,7 @@
                 <p class="card-text text-muted">@v.RefreshDate</p>
                 <a class="card-link" asp-action="ChangeStatus" asp-controller="Vacancy" asp-route-vacancyId="@v.Id">Поменять статус</a>
                 <a class="card-link" asp-action="RefreshDate" asp-controller="Vacancy" asp-route-vacancyId="@v.Id">Обновить</a>
-                <a asp-action="Details" asp-controller="Vacancy" asp-route-vacancyId="@v.Id">Подробнее</a>
+                <a asp-action="VacancyDetails" asp-controller="Profile" asp-route-vacancyId="@v.Id">Подробнее</a>
             </div>
         </div>
     </div>            }

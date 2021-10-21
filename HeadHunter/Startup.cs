@@ -68,7 +68,7 @@ namespace HeadHunter
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Profile}/{action=ChooseRole}/{id?}");
             });
         }
     }

@@ -1,0 +1,31 @@
+﻿@model Vacancy
+@{
+    ViewBag.Title = Model.Name;
+}
+<form asp-action="EditVacancy" asp-controller="Profile" asp-route-id="@Model.Id">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label">Название</label>
+        <input type="text" asp-for="Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label">Описание</label>
+        <input type="text" asp-for="Description" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ExpirienceFrom" class="control-label">Опыт работы от:</label>
+        <input type="number" asp-for="ExpirienceFrom" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ExpirienceTo" class="control-label">Опыт работы до:</label>
+        <input type="number" asp-for="ExpirienceTo" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Category" class="control-label">Категория вакансии</label>
+        @Html.DropDownListFor(o => o.Category, Enum.GetValues(typeof(Category)).Cast<Category>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }), htmlAttributes: new { id = "category" })
+    </div>
+    <input asp-for="Id" type="hidden" value="@Model.Id">
+    <input asp-for="UserId" type="hidden" value="@Model.UserId">
+    <div class="form-group">
+        <input type="submit" value="Изменить" class="btn btn-default" />
+    </div>
+</form>

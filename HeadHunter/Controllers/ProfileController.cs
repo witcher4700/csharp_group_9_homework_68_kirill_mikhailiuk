@@ -1,4 +1,5 @@
 ﻿using HeadHunter.Models;
+using HeadHunter.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -43,15 +44,20 @@ namespace HeadHunter.Controllers
         }
         public IActionResult ChooseRole()
         {
-            var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-            if (user.Occupation == Occupation.Работодатель)
+            if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Resume");
+                var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                if (user.Occupation == Occupation.Работодатель)
+                {
+                    return RedirectToAction("Index", "Resume");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Vacancy");
+                }
             }
-            else
-            {
-                return RedirectToAction("Index", "Vacancy");
-            }
+            return RedirectToAction("Login", "Account");
+
         }
         public ActionResult Edit()
         {
@@ -67,6 +73,64 @@ namespace HeadHunter.Controllers
             u.Avatar = user.Avatar;
             _context.SaveChanges();
             return RedirectToAction("Index", new { name = u.UserName });
+        }
+        [HttpGet]
+        public ActionResult EditResume(int resumeId)
+        {
+            var resume = _context.Resumes.Find(resumeId);
+            return View(resume);
+        }
+        [HttpPost, ActionName("EditResume")]
+        public ActionResult EditResume(Resume resume)
+        {
+            var r = _context.Resumes.Find(resume.Id);
+            _context.Entry(r).State = EntityState.Modified;
+            r.Description = resume.Description;
+            r.Facebook = resume.Facebook;
+            r.LinkedIn = resume.LinkedIn;
+            r.Telegram = resume.Telegram;
+            r.WantedSalary = resume.WantedSalary;
+            r.VacancyCategory = resume.VacancyCategory;
+            r.RefreshDate = DateTime.Now;
+            _context.SaveChanges();
+            return RedirectToAction("Index", new { name = User.Identity.Name });
+        }
+        [HttpGet]
+        public ActionResult EditVacancy(int vacancyId)
+        {
+            var vacancy = _context.Vacancies.Find(vacancyId);
+            return View(vacancy);
+        }
+        [HttpPost, ActionName("EditVacancy")]
+        public ActionResult EditVacancy(Vacancy vacancy)
+        {
+            var v = _context.Vacancies.Find(vacancy.Id);
+            _context.Entry(v).State = EntityState.Modified;
+            v.Name = vacancy.Name;
+            v.ExpirienceTo = vacancy.ExpirienceTo;
+            v.ExpirienceFrom = vacancy.ExpirienceFrom;
+            v.Description = vacancy.Description;
+            v.Category = vacancy.Category;
+            v.RefreshDate = DateTime.Now;
+            _context.SaveChanges();
+            return RedirectToAction("Index", new { name = User.Identity.Name });
+        }
+        public IActionResult ResumeDetails(int resumeId)
+        {
+            var resumeDetails = new ResumeDetails()
+            {
+                Resume = _context.Resumes.Find(resumeId)
+            };
+            resumeDetails.User = _context.Users.FirstOrDefault(u => u.Id == resumeDetails.Resume.UserId);
+            resumeDetails.Educations = _context.Educations.Where(e => e.ResumeId == resumeDetails.Resume.Id);
+            resumeDetails.Expiriences = _context.Expiriences.Where(e => e.ResumeId == resumeDetails.Resume.Id);
+            return View(resumeDetails);
+        }
+        public IActionResult VacancyDetails(int vacancyId)
+        {
+            var vacancy = _context.Vacancies.Find(vacancyId);
+
+            return View(vacancy);
         }
     }
 }

@@ -1,0 +1,35 @@
+﻿@model Resume
+@{
+    ViewData["Title"] = "Резюме";
+}
+<form asp-action="EditResume" asp-controller="Profile" asp-route-id="@Model.Id">
+    <div class="form-group">
+        <label asp-for="Facebook" class="control-label">Facebook</label>
+        <input type="text" asp-for="Facebook" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Telegram" class="control-label">Telegram</label>
+        <input type="text" asp-for="Telegram" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="LinkedIn" class="control-label">LinkedIn</label>
+        <input type="text" asp-for="LinkedIn" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label">Описание</label>
+        <input type="text" asp-for="Description" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="WantedSalary" class="control-label">Предпочитаемая зарплата</label>
+        <input type="number" asp-for="WantedSalary" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="VacancyCategory" class="control-label">Категория вакансии</label>
+        @Html.DropDownListFor(o => o.VacancyCategory, Enum.GetValues(typeof(Category)).Cast<Category>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }), htmlAttributes: new { id = "category" })
+    </div>
+    <input asp-for="Id" type="hidden" value="@Model.Id">
+    <input asp-for="UserId" type="hidden" value="@Model.UserId">
+    <div class="form-group">
+        <input type="submit" value="Изменить" class="btn btn-default" />
+    </div>
+</form>
