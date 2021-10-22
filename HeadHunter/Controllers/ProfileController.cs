@@ -34,13 +34,23 @@ namespace HeadHunter.Controllers
 
         public IActionResult ResumeIndex(string userId)
         {
-            var resumes = _context.Resumes.Where(r => r.UserId == userId).OrderByDescending(r => r.RefreshDate);
-            return View(resumes);
+            var resumeIndexViewModel = new ResumeIndexViewModel()
+            {
+                Resumes = _context.Resumes.Where(r => r.UserId == userId).OrderByDescending(r => r.RefreshDate).ToList()
+            };
+            var dialogs = _context.Dialogs.Where(d => d.FirstUserId == userId || d.SecondUserId == userId);
+            resumeIndexViewModel.DialogCount = dialogs.Count();
+            return View(resumeIndexViewModel);
         }
         public IActionResult VacancyIndex(string userId)
         {
-            var vacancies = _context.Vacancies.Where(r => r.UserId == userId).OrderByDescending(r => r.RefreshDate);
-            return View(vacancies);
+            var vacancyIndexViewModel = new VacancyIndexViewModel()
+            {
+                 Vacancies = _context.Vacancies.Where(r => r.UserId == userId).OrderByDescending(r => r.RefreshDate).ToList()
+            };
+            var dialogs = _context.Dialogs.Where(d => d.FirstUserId == userId || d.SecondUserId == userId);
+            vacancyIndexViewModel.DialogCount = dialogs.Count();
+            return View(vacancyIndexViewModel);
         }
         public IActionResult ChooseRole()
         {

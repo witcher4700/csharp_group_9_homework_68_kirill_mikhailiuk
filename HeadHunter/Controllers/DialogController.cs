@@ -70,5 +70,42 @@ namespace HeadHunter.Controllers
             _context.SaveChanges();
             return Ok();
         }
+        public IActionResult GetActiveDialogs()
+        {
+            var dialogs = _context.Dialogs.Where(d => d.FirstUserId == _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id || d.SecondUserId == _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id).ToList();
+            return View(dialogs);
+        }
+        public IActionResult IndexId(int vacancyId, int resumeId)
+        {
+            var userId = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
+
+            var dialogCheck = _context.Dialogs.FirstOrDefault(d => d.ResumeId == resumeId && d.VacancyId == vacancyId);
+
+            if (dialogCheck != null)
+            {
+                return View(dialogCheck);
+            }
+            else
+            {
+                var dialog = new Dialog()
+                {
+                    VacancyId = vacancyId,
+                    ResumeId = resumeId,
+                    FirstUserId = userId
+                };
+                var user = _context.Users.Find(dialog.FirstUserId);
+                if (user.Occupation == Occupation.Работодатель)
+                {
+                    dialog.SecondUserId = _context.Resumes.FirstOrDefault(r => r.Id == dialog.ResumeId).UserId;
+                }
+                else
+                {
+                    dialog.SecondUserId = _context.Vacancies.FirstOrDefault(r => r.Id == dialog.VacancyId).UserId;
+                }
+                _context.Dialogs.Add(dialog);
+                _context.SaveChanges();
+                return View(dialog);
+            }
+        }
     }
 }

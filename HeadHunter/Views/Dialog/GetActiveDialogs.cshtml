@@ -1,0 +1,26 @@
+﻿@{ ViewData["Title"] = "Home Page"; }
+@model List<Dialog>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>text-align</title>
+    <style>
+
+
+        .container {
+            width: 100%;
+            text-align: center
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Список диалогов</h3>
+        @foreach (var d in Model)
+        {
+            <a asp-action="IndexId" class="btn-primary btn" asp-controller="Dialog" asp-route-vacancyId="@d.VacancyId" asp-route-resumeId="@d.ResumeId">Диалог номер @d.Id</a>
+        }
+    </div>
+</body>
+</html>

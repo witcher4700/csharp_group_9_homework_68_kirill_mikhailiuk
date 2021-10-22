@@ -1,5 +1,5 @@
 ﻿@{ ViewData["Title"] = "Home Page"; }
-@model IEnumerable<Resume>
+@model HeadHunter.ViewModels.ResumeIndexViewModel
 
 <html>
 <head>
@@ -19,8 +19,9 @@
         <h3>Список резюме</h3>
         <a asp-action="Add" class="btn-primary btn" asp-controller="Resume">Добавить резюме</a>
         <a asp-action="Edit" asp-controller="Profile" class="btn-primary btn">Редактировать профиль</a>
+        <a asp-action="GetActiveDialogs" asp-controller="Dialog" class="btn-primary btn">Посмотреть активные отклики (всего @Model.DialogCount откликов)</a>
         <div class="row row-cols-1 row-cols-md-3">
-            @foreach (var v in Model)
+            @foreach (var v in Model.Resumes)
             {
 
     <div class="col mb-4">
