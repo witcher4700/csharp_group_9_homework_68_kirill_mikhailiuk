@@ -26,8 +26,9 @@
     <div class="col mb-4">
         <div class="card" style="width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title">Wanted salary: @v.WantedSalary</h5>
+                <h5 class="card-title">Название: @v.Name</h5>
                 <p class="card-text text-muted">@v.RefreshDate</p>
+                <p class="card-text text-muted">Status @v.Status</p>
                 <a class="card-link" asp-action="ChangeStatus" asp-controller="Resume" asp-route-resumeId="@v.Id">Поменять статус</a>
                 <a class="card-link" asp-action="RefreshDate" asp-controller="Resume" asp-route-resumeId="@v.Id">Обновить</a>
                 <a asp-action="ResumeDetails" asp-controller="Profile" asp-route-resumeId="@v.Id">Подробнее</a>

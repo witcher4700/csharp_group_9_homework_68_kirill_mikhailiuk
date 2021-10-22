@@ -1,7 +1,7 @@
-﻿@model HeadHunter.Models.Vacancy
+﻿@model HeadHunter.ViewModels.VacancyDetailViewModel
 
 
-@{ ViewData["Title"] = Model.Name; }
+@{ ViewData["Title"] = Model.Vacancy.Name; }
 
 
 <html>
@@ -14,25 +14,117 @@
             width: 100%;
             text-align: center
         }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Модальный (фон) */
+        .modal {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed; /* Оставаться на месте */
+            z-index: 1; /* Сидеть на вершине */
+            padding-top: 100px; /* Расположение коробки */
+            left: 0;
+            top: 0;
+            width: 100%; /* Полная ширина */
+            height: 100%; /* Полная высота */
+            overflow: auto; /* Включите прокрутку, если это необходимо */
+            background-color: rgb(0,0,0); /* Цвет запасной вариант  */
+            background-color: rgba(0,0,0,0.4); /*Черный с непрозрачностью */
+        }
+
+        /* Модальное содержание */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* Кнопка закрытия */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
     </style>
 </head>
 <body>
+    <div id="myModal" class="modal">
+            <!-- Модальное содержание -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <select asp-for="Resumes" id="resumes">
+                <option disabled selected>Выберите резюме</option>
+                @foreach (var res in Model.Resumes)
+                {
+    <option value="@res.Name">@res.Name</option>}
+            </select>
+            <a class="btn btn-primary" id="acceptBtn">Подтвердить</a>
+        </div>
+
+    </div>
     <div class="container">
         <div class="card text-center">
             <div class="card-header">
-                @Model.Name
+                @Model.Vacancy.Name
             </div>
             <div class="card-body">
-                <h5 class="card-title">Опыт работы от: @Model.ExpirienceFrom до @Model.ExpirienceTo лет</h5>
-                <p class="card-text">@Model.Description</p>
-                <p class="card-text">Категория вакансии: @Model.Category</p>
-                <a href="#" class="btn btn-primary">Откликнуться</a>
+                <h5 class="card-title">Опыт работы от: @Model.Vacancy.ExpirienceFrom до @Model.Vacancy.ExpirienceTo лет</h5>
+                <p class="card-text">@Model.Vacancy.Description</p>
+                <p class="card-text">Категория вакансии: @Model.Vacancy.Category</p>
+                <a class="btn btn-primary" id="dialogBtn">Откликнуться</a>
             </div>
             <div class="card-footer text-muted">
-                @Model.RefreshDate
+                @Model.Vacancy.RefreshDate
             </div>
         </div>
-    </div>   
+    </div>
+    @section scripts{
+        @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+<script>
+            $("#acceptBtn").click(function () {
+                var vacancyName = "@Model.Vacancy.Name";
+                var resumeName = $("#resumes").val();
+                var url = "/Dialog/Index?vacancyName=" + vacancyName + "&resumeName=" + resumeName;
+                window.location.href = url;
+            });
+
+            var modal = document.getElementById("myModal");
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("dialogBtn");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal
+            btn.onclick = function () {
+                modal.style.display = "block";
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }</script>
+    }
 </body>
 
 </html>

@@ -3,15 +3,17 @@ using System;
 using HeadHunter.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HeadHunter.Migrations
 {
     [DbContext(typeof(HeadHunterContext))]
-    partial class HeadHunterContextModelSnapshot : ModelSnapshot
+    [Migration("20211021220343_Dialogs")]
+    partial class Dialogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,14 +31,8 @@ namespace HeadHunter.Migrations
                     b.Property<string>("FirstUserId")
                         .HasColumnType("text");
 
-                    b.Property<int>("ResumeId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("SecondUserId")
                         .HasColumnType("text");
-
-                    b.Property<int>("VacancyId")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

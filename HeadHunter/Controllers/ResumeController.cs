@@ -40,7 +40,7 @@ namespace HeadHunter.Controllers
                 resume.Status = Status.InPublic;
             }
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index" , "Vacancy");
         }
         public IActionResult RefreshDate(int resumeId)
         {
@@ -59,6 +59,7 @@ namespace HeadHunter.Controllers
             resumeDetails.User = _context.Users.FirstOrDefault(u => u.Id == resumeDetails.Resume.UserId);
             resumeDetails.Educations = _context.Educations.Where(e => e.ResumeId == resumeDetails.Resume.Id);
             resumeDetails.Expiriences = _context.Expiriences.Where(e => e.ResumeId == resumeDetails.Resume.Id);
+            resumeDetails.Vacancies = _context.Vacancies.Where(r => r.UserId == _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id);
             return View(resumeDetails);
         }
 
@@ -106,7 +107,7 @@ namespace HeadHunter.Controllers
             _context.Expiriences.AddRange(expirienceList);
             _context.Educations.AddRange(educationList);
             _context.SaveChanges();
-            return RedirectToAction("Index", "Vacancy");
+            return Ok();
         }
     }
 }

@@ -12,6 +12,17 @@
     <div class="phone_add_form col-md-6">
 
         <form asp-action="Add" method="post">
+            <div class="form_row">
+
+                <label for="">
+
+                    Название 
+
+                    <input asp-for="Name" type="text" placeholder="Введите название" id="name" required="required">
+
+                </label>
+
+            </div>
 
             <div class="form_row">
 
@@ -238,6 +249,7 @@
                     {
                         educations: educations,
                         expiriences: expiriences,
+                        name: $('#name').val(),
                         description: $("#description").val(),
                         wantedSalary: $("#wantedSalary").val(),
                         telegram: $("#telegram").val(),
@@ -246,7 +258,8 @@
                         vacancyCategory: $("#category").val()
                     },
                     function (response) {
-                        console.log(response)
+                        var url = "/Vacancy/Index";
+                        window.location.href = url;
                     }
                 )
             }

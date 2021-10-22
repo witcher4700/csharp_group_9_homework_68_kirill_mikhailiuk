@@ -1,0 +1,166 @@
+﻿@{ ViewData["Title"] = "Home Page"; }
+
+@model Dialog
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>text-align</title>
+    <style>
+        .mainDiv {
+            overflow: scroll;
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .darker {
+            border-color: #ccc;
+            background-color: #ddd;
+        }
+
+        .container::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        .container img {
+            float: left;
+            max-width: 60px;
+            width: 100%;
+            margin-right: 20px;
+            border-radius: 50%;
+        }
+
+            .container img.right {
+                float: right;
+                margin-left: 20px;
+                margin-right: 0;
+            }
+
+        .time-right {
+            float: right;
+            color: #aaa;
+        }
+
+        .time-left {
+            float: left;
+            color: #999;
+        }
+
+        .name-right {
+            float: right;
+            color: #000000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .name-left {
+            float: left;
+            color: #000000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Chat Messages</h2>
+    <div id="chatDiv" class="mainDiv">
+        
+    </div>
+    <div class="container">
+        <form class="form-row align-items-center">
+            <div class="form-group col-10">
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" maxlength="150" required></textarea>
+            </div>
+            <div class="col-2">
+
+                <button type="submit" id="sendMessage" class="btn btn-primary mb-2">Отправить сообщение</button>
+            </div>
+        </form>
+    </div>
+
+
+    @section scripts{
+        @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+        <script>
+            var i =0
+            var myFunc = setInterval(function () {
+                $.get('@Url.Action("GetMessages", "Dialog")',
+                    {
+                        dialogId: "@Model.Id"
+                    },
+                    function (response) {
+                        console.log(response)
+                        var currentUser = "@User.Identity.Name"
+                        if (i != response.messages.length) {
+                            while (i < response.messages.length) {
+                                let mainDiv = $('<div/>').addClass('container')
+                                $('#chatDiv').append(mainDiv)
+                                let userImg = $('<img>').css('width', '100%').attr('id','avatar')
+                                mainDiv.append(userImg)
+                                let text = $('<p/>').attr('id', 'message')
+                                mainDiv.append(text)
+                                let nameText = $('<span/>').addClass('name-left userName')
+                                mainDiv.append(nameText)
+                                let timeText = $('<span/>').attr('id', 'name').addClass('time-right')
+                                let picture = response.messages[i].user.avatar
+                                if (currentUser == response.messages[i].user.userName) {
+                                    mainDiv.addClass('darker')
+                                    userImg.attr('src', picture).addClass('right')
+                                    text.text(response.messages[i].messageText)
+                                    nameText.text(response.messages[i].user.userName).addClass('name-right').removeClass('name-left').attr('id', response.messages[i].user.userName)
+                                    timeText.text(response.messages[i].messageSendTime).addClass('time-left').removeClass('time-right')
+                                }
+                                else {
+                                    userImg.attr('src', picture)
+                                    text.text(response.messages[i].messageText)
+                                    nameText.text(response.messages[i].user.userName).attr('id', response.messages[i].user.userName)
+                                    timeText.text(response.messages[i].messageSendTime)
+                                }
+                                i++
+                            }
+                        }
+                    }
+                )
+            },5000);
+
+            $("#sendMessage").click(function (e) {
+                e.preventDefault();
+                $.post('@Url.Action("WriteMessage", "Dialog")',
+                    {
+                        message: $('#exampleFormControlTextarea1').val(),
+                        dialogId: "@Model.Id"
+                    },
+                    function (response) {
+                        $('#exampleFormControlTextarea1').val("");
+                    }
+                )
+            });
+
+            $('#chatDiv').click(function (e) {
+                if (e.target.classList.contains("userName")) {
+                     $.post('@Url.Action("ShowProfilePost", "Profile")',
+                         {
+                            name: e.target.id
+                         },
+                         function (response) {
+                             console.log(response)
+                             var url = '@Url.Action("ShowProfile", "Profile", new { id = "__id__" })';
+
+                             window.location.href = url.replace('__id__', response.currentUser.id);
+                         }
+                     )
+                }
+            });
+        </script>
+    }
+
+</body>
+</html>

@@ -9,52 +9,141 @@
     <meta name="viewport" content="width=device-width" />
     <title>text-align</title>
     <style>
-
-        .container {
-            width: 100%;
-            text-align: center
+        body {
+            font-family: Arial, Helvetica, sans-serif;
         }
+
+        /* Модальный (фон) */
+        .modal {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed; /* Оставаться на месте */
+            z-index: 1; /* Сидеть на вершине */
+            padding-top: 100px; /* Расположение коробки */
+            left: 0;
+            top: 0;
+            width: 100%; /* Полная ширина */
+            height: 100%; /* Полная высота */
+            overflow: auto; /* Включите прокрутку, если это необходимо */
+            background-color: rgb(0,0,0); /* Цвет запасной вариант  */
+            background-color: rgba(0,0,0,0.4); /*Черный с непрозрачностью */
+        }
+
+        /* Модальное содержание */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* Кнопка закрытия */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
     </style>
 </head>
 <body>
+    <div id="myModal" class="modal">
+
+        <!-- Модальное содержание -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <select asp-for="Vacancies" id="vacancies">
+                <option disabled selected>Выберите вакансию</option>
+                @foreach (var vac in Model.Vacancies)
+                {
+    <option value="@vac.Name">@vac.Name</option>}
+            </select>
+            <a class="btn btn-primary" id="acceptBtn">Подтвердить</a>
+        </div>
+
+    </div>
     <div class="container">
         <div class="card text-center">
             <div class="card-body">
-                <h5 class="card-title">Препочитаемая зарплата: @Model.Resume.WantedSalary</h5>
+                <h5 class="card-title">Название: @Model.Resume.Name</h5>
+                <p class="card-text">Препочитаемая зарплата: @Model.Resume.WantedSalary</p>
                 <p class="card-text">@Model.Resume.Description</p>
                 @if (!String.IsNullOrEmpty(Model.Resume.Telegram))
                 {
-            <p class="card-text">Телега: @Model.Resume.Telegram</p>}
+    <p class="card-text">Телега: @Model.Resume.Telegram</p>}
                 @if (!String.IsNullOrEmpty(Model.Resume.LinkedIn))
                 {
-            <p class="card-text">ЛинкедИн: @Model.Resume.LinkedIn</p>}
+    <p class="card-text">ЛинкедИн: @Model.Resume.LinkedIn</p>}
                 @if (!String.IsNullOrEmpty(Model.Resume.Facebook))
                 {
-            <p class="card-text">Фасебук: @Model.Resume.Facebook</p>}
+    <p class="card-text">Фасебук: @Model.Resume.Facebook</p>}
                 <p class="card-text">Номер телефона: @Model.User.PhoneNumber</p>
                 <p class="card-text">Email: @Model.User.Email</p>
                 @foreach (var ed in Model.Educations)
                 {
-            <div class="card-body">
-                <p class="card-text">Название образования: @ed.Name</p>
-                <p class="card-text">Описание: @ed.Description</p>
-            </div>}
+    <div class="card-body">
+        <p class="card-text">Название образования: @ed.Name</p>
+        <p class="card-text">Описание: @ed.Description</p>
+    </div>}
                 @foreach (var ex in Model.Expiriences)
                 {
-            <div class="card-body">
-                <p class="card-text">Название: @ex.Name</p>
-                <p class="card-text">Количество месяцев на работе: @ex.MonthCount</p>
-                <p class="card-text">Должность: @ex.Position</p>
-                <p class="card-text">Обязанности: @ex.Responsibilities</p>
-            </div>}
+    <div class="card-body">
+        <p class="card-text">Название: @ex.Name</p>
+        <p class="card-text">Количество месяцев на работе: @ex.MonthCount</p>
+        <p class="card-text">Должность: @ex.Position</p>
+        <p class="card-text">Обязанности: @ex.Responsibilities</p>
+    </div>}
                 <p class="card-text">Категория резюме: @Model.Resume.VacancyCategory</p>
-                <a href="#" class="btn btn-primary">Откликнуться</a>
+                <a class="btn btn-primary" id="dialogBtn">Откликнуться</a>
             </div>
             <div class="card-footer text-muted">
                 @Model.Resume.RefreshDate
             </div>
         </div>
     </div>
+
+    @section scripts{
+        @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+<script>
+            $("#acceptBtn").click(function () {
+                var resumeName = "@Model.Resume.Name";
+                var vacancyName = $("#vacancies").val();
+                var url = "/Dialog/Index?vacancyName=" + vacancyName + "&resumeName=" + resumeName;
+                window.location.href = url;
+            });
+
+                var modal = document.getElementById("myModal");
+
+                // Get the button that opens the modal
+                var btn = document.getElementById("dialogBtn");
+
+                // Get the <span> element that closes the modal
+                var span = document.getElementsByClassName("close")[0];
+
+                // When the user clicks the button, open the modal
+                btn.onclick = function () {
+                    modal.style.display = "block";
+                }
+
+                // When the user clicks on <span> (x), close the modal
+                span.onclick = function () {
+                    modal.style.display = "none";
+                }
+
+                window.onclick = function (event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
+</script>
+    }
 </body>
 
 </html>

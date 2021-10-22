@@ -1,4 +1,5 @@
 ﻿using HeadHunter.Models;
+using HeadHunter.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -54,7 +55,7 @@ namespace HeadHunter.Controllers
                 vacancy.Status = Status.InPublic;
             }
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Resume");
         }
         public IActionResult RefreshDate(int vacancyId)
         {
@@ -67,9 +68,13 @@ namespace HeadHunter.Controllers
 
         public IActionResult Details(int vacancyId)
         {
-            var vacancy = _context.Vacancies.Find(vacancyId);
-            
-            return View(vacancy);
+            var vacancyDetails = new VacancyDetailViewModel()
+            {
+                Vacancy = _context.Vacancies.Find(vacancyId),
+                Resumes = _context.Resumes.Where(r => r.UserId == _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id),
+            };
+
+            return View(vacancyDetails);
         }
     }
 }
